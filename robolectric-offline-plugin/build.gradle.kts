@@ -2,6 +2,7 @@ plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `java-gradle-plugin`
     id("com.diffplug.spotless") version "6.23.3"
+    id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }
 
 repositories {

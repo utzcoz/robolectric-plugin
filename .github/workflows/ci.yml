@@ -28,6 +28,10 @@ jobs:
         run: |
           ./gradlew spotlessCheck
 
+      - name: Detekt Check
+        run: |
+          ./gradlew detekt
+
       - name: Build
         run: |
           ./gradlew build
