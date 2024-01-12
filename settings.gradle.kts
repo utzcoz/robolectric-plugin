@@ -1,3 +1,3 @@
-rootProject.name = "gradle-plugin-in-java"
+rootProject.name = "robolectric-offline-plugin"
 
-include("greeting-plugin")
+include("robolectric-offline-plugin")
