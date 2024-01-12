@@ -24,6 +24,10 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2.11.1
 
+      - name: Spotless Check
+        run: |
+          ./gradlew spotlessCheck
+
       - name: Build
         run: |
           ./gradlew build
