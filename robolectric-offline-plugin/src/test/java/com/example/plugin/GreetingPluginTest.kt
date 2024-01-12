@@ -1,9 +1,9 @@
 package com.example.plugin
 
-import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.api.Project
-import org.junit.Test
+import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Assert.assertNotNull
+import org.junit.Test
 
 class GreetingPluginTest {
     @Test

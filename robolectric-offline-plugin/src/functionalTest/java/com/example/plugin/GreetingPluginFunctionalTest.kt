@@ -12,18 +12,17 @@ class GreetingPluginFunctionalTest {
         writeString(File(projectDir, "settings.gradle"), "")
         writeString(
             File(projectDir, "build.gradle"),
-            "plugins {" +
-                    "  id('com.example.plugin.greeting')" +
-                    "}"
+            "plugins {" + "  id('com.example.plugin.greeting')" + "}"
         )
 
         // Run the build
-        val result: BuildResult = GradleRunner.create()
-            .forwardOutput()
-            .withPluginClasspath()
-            .withArguments("greet")
-            .withProjectDir(projectDir)
-            .build()
+        val result: BuildResult =
+            GradleRunner.create()
+                .forwardOutput()
+                .withPluginClasspath()
+                .withArguments("greet")
+                .withProjectDir(projectDir)
+                .build()
 
         // Verify the result
         assertTrue(result.getOutput().contains("Hello from plugin 'com.example.plugin.greeting'"))
@@ -31,8 +30,6 @@ class GreetingPluginFunctionalTest {
 
     @Throws(IOException::class)
     private fun writeString(file: File, string: String) {
-        FileWriter(file).use { writer ->
-            writer.write(string)
-        }
+        FileWriter(file).use { writer -> writer.write(string) }
     }
 }

@@ -6,7 +6,9 @@ import org.gradle.api.Project
 class GreetingPlugin : Plugin<Project?> {
     fun apply(project: Project) {
         project.getTasks().register("greet") { task ->
-            task.doLast { s -> System.out.println("Hello from plugin 'com.example.plugin.greeting'") }
+            task.doLast { s ->
+                System.out.println("Hello from plugin 'com.example.plugin.greeting'")
+            }
         }
     }
 }
