@@ -32,13 +32,13 @@ gradlePlugin {
     // Define the plugin
     val greeting by
         plugins.creating {
-            id = "com.example.plugin.greeting"
-            implementationClass = "com.example.plugin.GreetingPlugin"
+            id = "me.utzcoz.robolectric.offline"
+            implementationClass = "me.utzcoz.robolectric.offline.RobolectricPlugin"
         }
 }
 
 // Add a source set and a task for a functional test suite
-val functionalTest by sourceSets.creating
+val functionalTest: SourceSet by sourceSets.creating
 
 gradlePlugin.testSourceSets(functionalTest)
 

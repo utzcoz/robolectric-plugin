@@ -1,11 +1,11 @@
-package com.example.plugin
+package me.utzcoz.robolectric.offline
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 
-class GreetingPluginTest {
+class RobolectricOfflinePluginTest {
     @Test
     fun pluginRegistersATask() {
         // Create a test project and apply the plugin

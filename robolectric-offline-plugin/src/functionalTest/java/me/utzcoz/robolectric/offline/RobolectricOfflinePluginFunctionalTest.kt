@@ -1,8 +1,15 @@
-package com.example.plugin
+package me.utzcoz.robolectric.offline
 
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.nio.file.Files
+import junit.framework.TestCase.assertTrue
 import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.GradleRunner
+import org.junit.Test
 
-class GreetingPluginFunctionalTest {
+class RobolectricOfflinePluginFunctionalTest {
     @Test
     @Throws(IOException::class)
     fun canRunTask() {
