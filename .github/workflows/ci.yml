@@ -39,3 +39,7 @@ jobs:
       - name: Test
         run: |
           ./gradlew test
+
+      - name: Public to mavenLocal
+        run: |
+          ./gradlew publishPluginMavenPublicationToMavenLocal
