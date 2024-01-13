@@ -30,7 +30,7 @@ dependencies {
 
 gradlePlugin {
     // Define the plugin
-    val greeting by
+    val robolectricOffline by
         plugins.creating {
             id = "me.utzcoz.robolectric.offline"
             implementationClass = "me.utzcoz.robolectric.offline.RobolectricPlugin"

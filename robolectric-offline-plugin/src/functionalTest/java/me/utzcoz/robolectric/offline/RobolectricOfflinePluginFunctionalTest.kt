@@ -14,7 +14,7 @@ class RobolectricOfflinePluginFunctionalTest {
     @Throws(IOException::class)
     fun canRunTask() {
         // Setup the test build
-        val projectDir: File = File("build/functionalTest")
+        val projectDir = File("build/functionalTest")
         Files.createDirectories(projectDir.toPath())
         writeString(File(projectDir, "settings.gradle"), "")
         writeString(
@@ -32,7 +32,7 @@ class RobolectricOfflinePluginFunctionalTest {
                 .build()
 
         // Verify the result
-        assertTrue(result.getOutput().contains("Hello from plugin 'com.example.plugin.greeting'"))
+        assertTrue(result.output.contains("Hello from plugin 'me.utzcoz.robolectric.offline'"))
     }
 
     @Throws(IOException::class)
