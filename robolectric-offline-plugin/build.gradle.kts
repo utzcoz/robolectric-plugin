@@ -1,9 +1,11 @@
 plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `java-gradle-plugin`
+    `maven-publish`
     kotlin("jvm") version "1.9.22"
     id("com.diffplug.spotless") version "6.23.3"
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    id("com.gradle.plugin-publish") version "1.2.1"
 }
 
 repositories {
@@ -24,18 +26,28 @@ spotless {
     }
 }
 
+group = "me.utzcoz.robolectric"
+
+version = "0.1-snapshot"
+
 dependencies {
     // Use JUnit test framework for unit tests
     testImplementation("junit:junit:4.13.2")
 }
 
 gradlePlugin {
-    // Define the plugin
-    val robolectricOffline by
-        plugins.creating {
+    website = "https://github.com/utzcoz/robolectric-offline-plugin"
+    vcsUrl = "https://github.com/utzcoz/robolectric-offline-plugin"
+    plugins {
+        create("robolectricOffline") {
             id = "me.utzcoz.robolectric.offline"
             implementationClass = "me.utzcoz.robolectric.offline.RobolectricOfflinePlugin"
+            displayName = "robolectricOffline"
+            description =
+                "A plugin to download and manage android-all jars for Robolectric offline mode."
+            tags = listOf("robolectric", "Robolectric", "robolectric-offline")
         }
+    }
 }
 
 // Add a source set and a task for a functional test suite
