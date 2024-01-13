@@ -10,9 +10,9 @@ class RobolectricOfflinePluginTest {
     fun pluginRegistersATask() {
         // Create a test project and apply the plugin
         val project: Project = ProjectBuilder.builder().build()
-        project.getPlugins().apply("com.example.plugin.greeting")
+        project.plugins.apply("me.utzcoz.robolectric.offline")
 
         // Verify the result
-        assertNotNull(project.getTasks().findByName("greet"))
+        assertNotNull(project.tasks.findByName("robolectricOffline"))
     }
 }
