@@ -4,7 +4,7 @@ plugins {
     `maven-publish`
     kotlin("jvm") version "1.9.22"
     id("com.diffplug.spotless") version "6.25.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.4"
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
     id("com.gradle.plugin-publish") version "1.2.1"
 }
 
