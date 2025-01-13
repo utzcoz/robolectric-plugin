@@ -3,7 +3,7 @@ plugins {
     `java-gradle-plugin`
     `maven-publish`
     kotlin("jvm") version "2.1.0"
-    id("com.diffplug.spotless") version "6.25.0"
+    id("com.diffplug.spotless") version "7.0.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.7"
     id("com.gradle.plugin-publish") version "1.3.0"
 }
