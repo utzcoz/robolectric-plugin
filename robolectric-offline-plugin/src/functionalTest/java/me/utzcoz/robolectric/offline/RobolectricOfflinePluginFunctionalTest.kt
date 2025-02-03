@@ -19,7 +19,7 @@ class RobolectricOfflinePluginFunctionalTest {
         writeString(File(projectDir, "settings.gradle"), "")
         writeString(
             File(projectDir, "build.gradle"),
-            "plugins {" + "  id('me.utzcoz.robolectric.offline')" + "}"
+            "plugins {" + "  id('me.utzcoz.robolectric.offline')" + "}",
         )
 
         // Run the build
