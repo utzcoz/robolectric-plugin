@@ -43,7 +43,7 @@ class RobolectricOfflinePluginTest {
         // Verify the default Robolectric version
         val extension = project.extensions.findByType(RobolectricOfflineExtension::class.java)
         assertNotNull(extension)
-        assertEquals("4.14", extension!!.robolectricVersion.get())
+        assertEquals("4.16.1", extension!!.robolectricVersion.get())
     }
 
     @Test

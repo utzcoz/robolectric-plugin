@@ -26,151 +26,147 @@ data class RobolectricSdk(
     /** The Maven coordinates in the format "groupId:artifactId:version". */
     val coordinates: String = "$groupId:$artifactId:$version"
 
+    @Suppress("MagicNumber")
     companion object {
-        // Android API level constants
-        private const val API_KITKAT = 19
-        private const val API_LOLLIPOP = 21
-        private const val API_LOLLIPOP_MR1 = 22
-        private const val API_MARSHMALLOW = 23
-        private const val API_NOUGAT = 24
-        private const val API_NOUGAT_MR1 = 25
-        private const val API_OREO = 26
-        private const val API_OREO_MR1 = 27
-        private const val API_PIE = 28
-        private const val API_Q = 29
-        private const val API_R = 30
-        private const val API_S = 31
-        private const val API_S_V2 = 32
-        private const val API_TIRAMISU = 33
-        private const val API_UPSIDE_DOWN_CAKE = 34
-        private const val API_VANILLA_ICE_CREAM = 35
-
-        // Preinstrumented jar version constants
-        private const val PREINSTRUMENTED_V4 = 4
-        private const val PREINSTRUMENTED_V5 = 5
-        private const val PREINSTRUMENTED_V6 = 6
-        private const val PREINSTRUMENTED_V7 = 7
-
-        // Robolectric version thresholds
-        private const val ROBOLECTRIC_MAJOR_V4 = 4
-        private const val ROBOLECTRIC_MINOR_I7_START = 14
-        private const val ROBOLECTRIC_MINOR_I6_START = 12
-        private const val ROBOLECTRIC_MINOR_I6_END = 13
-        private const val ROBOLECTRIC_MINOR_I5_START = 10
-        private const val ROBOLECTRIC_MINOR_I5_END = 11
-        private const val ROBOLECTRIC_MINOR_I4_START = 8
-        private const val ROBOLECTRIC_MINOR_I4_END = 9
-
         /**
-         * Returns the SDK definitions supported by each Robolectric version. The mapping is based
-         * on DefaultSdkProvider from Robolectric.
+         * Returns the SDK definitions supported by each Robolectric version.
          *
-         * @param robolectricVersion The Robolectric library version (e.g., "4.11", "4.12", "4.14")
+         * This uses explicit version mapping without complex version comparison logic. When a new
+         * Robolectric version is released with SDK changes, a new entry should be added here.
+         *
+         * @param robolectricVersion The Robolectric library version (e.g., "4.14", "4.16.1")
          * @return A list of SDK definitions supported by the specified Robolectric version
          */
         @JvmStatic
         fun sdksForRobolectricVersion(robolectricVersion: String): List<RobolectricSdk> {
-            // Parse version like "4.11", "4.12", "4.14.1"
-            val versionParts = robolectricVersion.split(".")
-            val major = versionParts.getOrNull(0)?.toIntOrNull() ?: ROBOLECTRIC_MAJOR_V4
-            val minor = versionParts.getOrNull(1)?.toIntOrNull() ?: 0
-
-            return when {
-                // Robolectric 4.14+ uses preinstrumented version i7
-                major > ROBOLECTRIC_MAJOR_V4 ||
-                    (major == ROBOLECTRIC_MAJOR_V4 && minor >= ROBOLECTRIC_MINOR_I7_START) ->
-                    sdksForI7()
-                // Robolectric 4.12-4.13 uses preinstrumented version i6
-                major == ROBOLECTRIC_MAJOR_V4 &&
-                    minor in ROBOLECTRIC_MINOR_I6_START..ROBOLECTRIC_MINOR_I6_END -> sdksForI6()
-                // Robolectric 4.10-4.11 uses preinstrumented version i5
-                major == ROBOLECTRIC_MAJOR_V4 &&
-                    minor in ROBOLECTRIC_MINOR_I5_START..ROBOLECTRIC_MINOR_I5_END -> sdksForI5()
-                // Robolectric 4.8-4.9 uses preinstrumented version i4
-                major == ROBOLECTRIC_MAJOR_V4 &&
-                    minor in ROBOLECTRIC_MINOR_I4_START..ROBOLECTRIC_MINOR_I4_END -> sdksForI4()
-                // Default to i7 for unknown versions
-                else -> sdksForI7()
+            return when (robolectricVersion) {
+                // Robolectric 4.16.x - supports SDK 23-36, preinstrumented version i7
+                "4.16",
+                "4.16.1" -> sdksForRobolectric416()
+                // Robolectric 4.14.x and 4.15.x - supports SDK 21-35, preinstrumented version i7
+                "4.14",
+                "4.14.1",
+                "4.15",
+                "4.15.1" -> sdksForRobolectric414()
+                // Robolectric 4.12.x and 4.13.x - supports SDK 19-34, preinstrumented version i6
+                "4.12",
+                "4.12.1",
+                "4.13",
+                "4.13.1" -> sdksForRobolectric412()
+                // Robolectric 4.10.x and 4.11.x - supports SDK 19-33, preinstrumented version i5
+                "4.10",
+                "4.10.1",
+                "4.10.2",
+                "4.10.3",
+                "4.11",
+                "4.11.1" -> sdksForRobolectric410()
+                // Robolectric 4.8.x and 4.9.x - supports SDK 19-33, preinstrumented version i4
+                "4.8",
+                "4.8.1",
+                "4.8.2",
+                "4.9",
+                "4.9.1",
+                "4.9.2" -> sdksForRobolectric48()
+                // Default to latest known version (4.16.1) for unknown versions
+                else -> sdksForRobolectric416()
             }
         }
 
-        /** SDKs for Robolectric 4.14+ with preinstrumented version i7. */
-        private fun sdksForI7(): List<RobolectricSdk> =
+        /** SDKs for Robolectric 4.16.x - SDK 23-36, preinstrumented version i7. */
+        private fun sdksForRobolectric416(): List<RobolectricSdk> =
             listOf(
-                RobolectricSdk(API_KITKAT, "4.4_r1", "r2", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_LOLLIPOP, "5.0.2_r3", "r0", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_LOLLIPOP_MR1, "5.1.1_r9", "r2", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_MARSHMALLOW, "6.0.1_r3", "r1", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_NOUGAT, "7.0.0_r1", "r1", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_NOUGAT_MR1, "7.1.0_r7", "r1", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_OREO, "8.0.0_r4", "r1", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_OREO_MR1, "8.1.0", "4611349", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_PIE, "9", "4913185-2", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_Q, "10", "5803371", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_R, "11", "6757853", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_S, "12", "7732740", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_S_V2, "12.1", "8229987", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_TIRAMISU, "13", "9030017", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_UPSIDE_DOWN_CAKE, "14", "10818077", PREINSTRUMENTED_V7),
-                RobolectricSdk(API_VANILLA_ICE_CREAM, "15", "12650502", PREINSTRUMENTED_V7),
+                RobolectricSdk(23, "6.0.1_r3", "r1", 7),
+                RobolectricSdk(24, "7.0.0_r1", "r1", 7),
+                RobolectricSdk(25, "7.1.0_r7", "r1", 7),
+                RobolectricSdk(26, "8.0.0_r4", "r1", 7),
+                RobolectricSdk(27, "8.1.0", "4611349", 7),
+                RobolectricSdk(28, "9", "4913185-2", 7),
+                RobolectricSdk(29, "10", "5803371", 7),
+                RobolectricSdk(30, "11", "6757853", 7),
+                RobolectricSdk(31, "12", "7732740", 7),
+                RobolectricSdk(32, "12.1", "8229987", 7),
+                RobolectricSdk(33, "13", "9030017", 7),
+                RobolectricSdk(34, "14", "10818077", 7),
+                RobolectricSdk(35, "15", "13954326", 7),
+                RobolectricSdk(36, "16", "13921718", 7),
             )
 
-        /** SDKs for Robolectric 4.12-4.13 with preinstrumented version i6. */
-        private fun sdksForI6(): List<RobolectricSdk> =
+        /** SDKs for Robolectric 4.14.x and 4.15.x - SDK 21-35, preinstrumented version i7. */
+        private fun sdksForRobolectric414(): List<RobolectricSdk> =
             listOf(
-                RobolectricSdk(API_KITKAT, "4.4_r1", "r2", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_LOLLIPOP, "5.0.2_r3", "r0", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_LOLLIPOP_MR1, "5.1.1_r9", "r2", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_MARSHMALLOW, "6.0.1_r3", "r1", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_NOUGAT, "7.0.0_r1", "r1", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_NOUGAT_MR1, "7.1.0_r7", "r1", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_OREO, "8.0.0_r4", "r1", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_OREO_MR1, "8.1.0", "4611349", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_PIE, "9", "4913185-2", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_Q, "10", "5803371", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_R, "11", "6757853", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_S, "12", "7732740", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_S_V2, "12.1", "8229987", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_TIRAMISU, "13", "9030017", PREINSTRUMENTED_V6),
-                RobolectricSdk(API_UPSIDE_DOWN_CAKE, "14", "10818077", PREINSTRUMENTED_V6),
+                RobolectricSdk(21, "5.0.2_r3", "r0", 7),
+                RobolectricSdk(22, "5.1.1_r9", "r2", 7),
+                RobolectricSdk(23, "6.0.1_r3", "r1", 7),
+                RobolectricSdk(24, "7.0.0_r1", "r1", 7),
+                RobolectricSdk(25, "7.1.0_r7", "r1", 7),
+                RobolectricSdk(26, "8.0.0_r4", "r1", 7),
+                RobolectricSdk(27, "8.1.0", "4611349", 7),
+                RobolectricSdk(28, "9", "4913185-2", 7),
+                RobolectricSdk(29, "10", "5803371", 7),
+                RobolectricSdk(30, "11", "6757853", 7),
+                RobolectricSdk(31, "12", "7732740", 7),
+                RobolectricSdk(32, "12.1", "8229987", 7),
+                RobolectricSdk(33, "13", "9030017", 7),
+                RobolectricSdk(34, "14", "10818077", 7),
+                RobolectricSdk(35, "15", "12650502", 7),
             )
 
-        /** SDKs for Robolectric 4.10-4.11 with preinstrumented version i5. */
-        private fun sdksForI5(): List<RobolectricSdk> =
+        /** SDKs for Robolectric 4.12.x and 4.13.x - SDK 19-34, preinstrumented version i6. */
+        private fun sdksForRobolectric412(): List<RobolectricSdk> =
             listOf(
-                RobolectricSdk(API_KITKAT, "4.4_r1", "r2", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_LOLLIPOP, "5.0.2_r3", "r0", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_LOLLIPOP_MR1, "5.1.1_r9", "r2", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_MARSHMALLOW, "6.0.1_r3", "r1", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_NOUGAT, "7.0.0_r1", "r1", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_NOUGAT_MR1, "7.1.0_r7", "r1", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_OREO, "8.0.0_r4", "r1", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_OREO_MR1, "8.1.0", "4611349", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_PIE, "9", "4913185-2", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_Q, "10", "5803371", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_R, "11", "6757853", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_S, "12", "7732740", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_S_V2, "12.1", "8229987", PREINSTRUMENTED_V5),
-                RobolectricSdk(API_TIRAMISU, "13", "9030017", PREINSTRUMENTED_V5),
+                RobolectricSdk(19, "4.4_r1", "r2", 6),
+                RobolectricSdk(21, "5.0.2_r3", "r0", 6),
+                RobolectricSdk(22, "5.1.1_r9", "r2", 6),
+                RobolectricSdk(23, "6.0.1_r3", "r1", 6),
+                RobolectricSdk(24, "7.0.0_r1", "r1", 6),
+                RobolectricSdk(25, "7.1.0_r7", "r1", 6),
+                RobolectricSdk(26, "8.0.0_r4", "r1", 6),
+                RobolectricSdk(27, "8.1.0", "4611349", 6),
+                RobolectricSdk(28, "9", "4913185-2", 6),
+                RobolectricSdk(29, "10", "5803371", 6),
+                RobolectricSdk(30, "11", "6757853", 6),
+                RobolectricSdk(31, "12", "7732740", 6),
+                RobolectricSdk(32, "12.1", "8229987", 6),
+                RobolectricSdk(33, "13", "9030017", 6),
+                RobolectricSdk(34, "14", "10818077", 6),
             )
 
-        /** SDKs for Robolectric 4.8-4.9 with preinstrumented version i4. */
-        private fun sdksForI4(): List<RobolectricSdk> =
+        /** SDKs for Robolectric 4.10.x and 4.11.x - SDK 19-33, preinstrumented version i5. */
+        private fun sdksForRobolectric410(): List<RobolectricSdk> =
             listOf(
-                RobolectricSdk(API_KITKAT, "4.4_r1", "r2", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_LOLLIPOP, "5.0.2_r3", "r0", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_LOLLIPOP_MR1, "5.1.1_r9", "r2", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_MARSHMALLOW, "6.0.1_r3", "r1", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_NOUGAT, "7.0.0_r1", "r1", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_NOUGAT_MR1, "7.1.0_r7", "r1", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_OREO, "8.0.0_r4", "r1", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_OREO_MR1, "8.1.0", "4611349", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_PIE, "9", "4913185-2", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_Q, "10", "5803371", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_R, "11", "6757853", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_S, "12", "7732740", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_S_V2, "12.1", "8229987", PREINSTRUMENTED_V4),
-                RobolectricSdk(API_TIRAMISU, "13", "9030017", PREINSTRUMENTED_V4),
+                RobolectricSdk(19, "4.4_r1", "r2", 5),
+                RobolectricSdk(21, "5.0.2_r3", "r0", 5),
+                RobolectricSdk(22, "5.1.1_r9", "r2", 5),
+                RobolectricSdk(23, "6.0.1_r3", "r1", 5),
+                RobolectricSdk(24, "7.0.0_r1", "r1", 5),
+                RobolectricSdk(25, "7.1.0_r7", "r1", 5),
+                RobolectricSdk(26, "8.0.0_r4", "r1", 5),
+                RobolectricSdk(27, "8.1.0", "4611349", 5),
+                RobolectricSdk(28, "9", "4913185-2", 5),
+                RobolectricSdk(29, "10", "5803371", 5),
+                RobolectricSdk(30, "11", "6757853", 5),
+                RobolectricSdk(31, "12", "7732740", 5),
+                RobolectricSdk(32, "12.1", "8229987", 5),
+                RobolectricSdk(33, "13", "9030017", 5),
+            )
+
+        /** SDKs for Robolectric 4.8.x and 4.9.x - SDK 19-33, preinstrumented version i4. */
+        private fun sdksForRobolectric48(): List<RobolectricSdk> =
+            listOf(
+                RobolectricSdk(19, "4.4_r1", "r2", 4),
+                RobolectricSdk(21, "5.0.2_r3", "r0", 4),
+                RobolectricSdk(22, "5.1.1_r9", "r2", 4),
+                RobolectricSdk(23, "6.0.1_r3", "r1", 4),
+                RobolectricSdk(24, "7.0.0_r1", "r1", 4),
+                RobolectricSdk(25, "7.1.0_r7", "r1", 4),
+                RobolectricSdk(26, "8.0.0_r4", "r1", 4),
+                RobolectricSdk(27, "8.1.0", "4611349", 4),
+                RobolectricSdk(28, "9", "4913185-2", 4),
+                RobolectricSdk(29, "10", "5803371", 4),
+                RobolectricSdk(30, "11", "6757853", 4),
+                RobolectricSdk(31, "12", "7732740", 4),
+                RobolectricSdk(32, "12.1", "8229987", 4),
+                RobolectricSdk(33, "13", "9030017", 4),
             )
     }
 }

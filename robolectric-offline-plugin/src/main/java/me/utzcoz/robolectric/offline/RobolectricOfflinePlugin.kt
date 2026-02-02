@@ -17,7 +17,7 @@ import org.gradle.api.Project
  * }
  *
  * robolectricOffline {
- *     robolectricVersion.set("4.14")
+ *     robolectricVersion.set("4.16.1")
  * }
  * ```
  *
@@ -34,7 +34,7 @@ class RobolectricOfflinePlugin : Plugin<Project> {
         // Create the extension
         val extension =
             target.extensions.create("robolectricOffline", RobolectricOfflineExtension::class.java)
-        extension.robolectricVersion.convention("4.14")
+        extension.robolectricVersion.convention("4.16.1")
 
         // Register the download task
         target.tasks.register("robolectricOffline", DownloadRobolectricAndroidTask::class.java) {

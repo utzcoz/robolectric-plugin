@@ -19,14 +19,14 @@ import org.gradle.api.tasks.TaskAction
  */
 abstract class DownloadRobolectricAndroidTask : DefaultTask() {
     /**
-     * The Robolectric version to use for determining which SDK jars to download. Default: "4.14"
+     * The Robolectric version to use for determining which SDK jars to download. Default: "4.16.1"
      */
     @get:Input abstract val robolectricVersion: Property<String>
 
     init {
         group = "robolectric"
         description = "Downloads preinstrumented android.jar files for Robolectric offline mode"
-        robolectricVersion.convention("4.14")
+        robolectricVersion.convention("4.16.1")
     }
 
     @TaskAction
