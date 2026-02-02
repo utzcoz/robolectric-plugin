@@ -37,8 +37,13 @@ abstract class DownloadRobolectricAndroidTask : DefaultTask() {
         logger.lifecycle("Downloading preinstrumented android.jar files for Robolectric $version")
         logger.lifecycle("SDKs to download: ${sdks.size}")
 
-        val configuration: Configuration =
-            project.configurations.create("robolectricAndroidAll_${System.currentTimeMillis()}")
+        val configurationName = "robolectricAndroidAll_${version.replace(".", "_")}"
+        // Remove existing configuration if it exists (from previous runs)
+        project.configurations.findByName(configurationName)?.let {
+            project.configurations.remove(it)
+        }
+
+        val configuration: Configuration = project.configurations.create(configurationName)
         configuration.isTransitive = false
 
         sdks.forEach { sdk ->
