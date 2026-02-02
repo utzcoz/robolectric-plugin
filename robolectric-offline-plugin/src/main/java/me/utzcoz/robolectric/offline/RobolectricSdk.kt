@@ -87,6 +87,9 @@ data class RobolectricSdk(
                 RobolectricSdk(32, "12.1", "8229987", 7),
                 RobolectricSdk(33, "13", "9030017", 7),
                 RobolectricSdk(34, "14", "10818077", 7),
+                // Note: SDK 35 uses robolectricVersion 13954326 (updated from 12650502 in 4.14)
+                // SDK 36 uses robolectricVersion 13921718
+                // These versions come directly from Robolectric's DefaultSdkProvider
                 RobolectricSdk(35, "15", "13954326", 7),
                 RobolectricSdk(36, "16", "13921718", 7),
             )
