@@ -2,7 +2,7 @@ plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `java-gradle-plugin`
     `maven-publish`
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm") version "2.3.10"
     id("com.diffplug.spotless") version "8.2.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("com.gradle.plugin-publish") version "2.0.0"
