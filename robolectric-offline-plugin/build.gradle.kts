@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "2.3.21"
     id("com.diffplug.spotless") version "8.10.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradle.plugin-publish") version "2.1.1"
+    id("com.gradle.plugin-publish") version "2.2.1"
 }
 
 repositories {
